@@ -4,6 +4,8 @@ Offer Doctor is a demand-first MVP tool that audits landing-page copy, scores th
 
 It is built as a small Node.js application: a static frontend, a lightweight HTTP API, local JSON/JSONL storage, optional AI providers, and a heuristic fallback that works without external keys.
 
+![Offer Doctor interface](docs/offer-doctor-demo.png)
+
 ## Features
 
 - Audit pasted landing-page copy or extract copy from a URL.
@@ -109,6 +111,44 @@ Covered smoke checks include:
 - admin token behavior;
 - lead source URL sanitization;
 - report history ordering with malformed JSON ignored.
+
+## Portfolio Case Study
+
+### Problem
+
+Many AI-built MVPs fail because the product is built before the offer is proven. Founders and small teams often ship landing pages with vague positioning, weak proof, and unclear CTAs, then keep adding product features instead of fixing demand.
+
+### Solution
+
+Offer Doctor turns offer validation into a lightweight tool: paste landing-page copy or provide a URL, get a commercial score, see the highest-priority conversion issues, and save the result into a simple lead workflow.
+
+### Architecture
+
+- `server.js` owns the HTTP API, static serving, URL extraction, storage, AI provider calls, Telegram notifications, and admin endpoint protection.
+- `audit-core.js` owns deterministic heuristic scoring and AI report normalization.
+- `app.js` owns frontend state, rendering, export actions, history interactions, and lead inbox workflows.
+- `data/` stores local reports and leads for MVP speed, while tests use an isolated temporary data directory.
+
+### Security And Reliability Work
+
+The project includes security hardening that is visible in the code and backed by tests:
+
+- report ID validation blocks path traversal on read/update/delete endpoints;
+- SSRF checks reject private, loopback, link-local, metadata, and IPv4-mapped IPv6 targets during URL extraction;
+- request body limits protect API endpoints from unbounded JSON payloads;
+- optional `ADMIN_TOKEN` protects private report and lead management endpoints;
+- lead source URLs are sanitized before being rendered as links.
+
+### Tradeoffs
+
+Local file storage keeps the MVP easy to run and review, but it is not ideal for multi-instance deployments. A production version should move reports/leads to a database, add a small admin login flow, and separate public lead capture from private CRM views.
+
+### What I Would Improve Next
+
+- Add an admin-token UI or real login for the history and lead inbox panels.
+- Replace local JSON storage with Postgres or SQLite for concurrent writes and querying.
+- Unify all product UI copy into one language.
+- Add screenshots or a short GIF of the full audit-to-lead flow.
 
 ## Project Structure
 
