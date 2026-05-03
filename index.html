@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offer Doctor</title>
+    <meta
+      name="description"
+      content="MVP-аудитор оффера и лендинга: вставьте текст страницы или ссылку и получите разбор по ясности, ценности, доверию и CTA."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23c6612f'/%3E%3Cpath d='M18 42h28v4H18zm4-22h20a8 8 0 0 1 0 16H30v8h-8zm8 8v0h12a4 4 0 0 0 0-8H30z' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Demand-first MVP</p>
+          <h1>Offer Doctor</h1>
+          <p class="hero-text">
+            Разбирает лендинг и оффер так, будто рядом сидит growth-консультант:
+            где непонятно, где неубедительно и где вы теряете заявку.
+          </p>
+          <div class="hero-points">
+            <span>Скоринг за 60 секунд</span>
+            <span>Понятные причины просадки</span>
+            <span>Готовые правки для первого экрана</span>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <p class="hero-card-label">Что получает пользователь</p>
+          <ul>
+            <li>Общий коммерческий балл страницы</li>
+            <li>Приоритетные слабые места</li>
+            <li>Новый заголовок и CTA для теста</li>
+            <li>Короткий отчет, который можно отправить команде</li>
+          </ul>
+        </aside>
+      </header>
+
+      <main class="grid">
+        <section class="panel form-panel">
+          <div class="panel-head">
+            <p class="section-kicker">Аудит</p>
+            <h2>Введите данные страницы</h2>
+            <p>
+              Можно вставить либо текст лендинга вручную, либо только ссылку.
+              Если вы даете URL, сервис сам попробует извлечь текст страницы.
+            </p>
+          </div>
+
+          <form id="audit-form" class="audit-form">
+            <label>
+              Ниша
+              <input
+                id="niche"
+                name="niche"
+                type="text"
+                placeholder="Например: стоматология, агентство, SaaS"
+              />
+            </label>
+
+            <label>
+              Целевая аудитория
+              <input
+                id="audience"
+                name="audience"
+                type="text"
+                placeholder="Например: владельцы клиник, маркетологи, HR"
+              />
+            </label>
+
+            <label>
+              Цель страницы
+              <select id="goal" name="goal">
+                <option value="lead">Получить заявку</option>
+                <option value="call">Записать на созвон</option>
+                <option value="demo">Получить демо</option>
+                <option value="sale">Продать сразу</option>
+              </select>
+            </label>
+
+            <label>
+              URL страницы
+              <input
+                id="url"
+                name="url"
+                type="url"
+                placeholder="https://example.com"
+              />
+            </label>
+            <p class="field-note">
+              Можно вставить только ссылку: сервис сам попробует извлечь текст
+              страницы для аудита.
+            </p>
+
+            <label>
+              Текст лендинга
+              <textarea
+                id="landing-copy"
+                name="landing-copy"
+                rows="14"
+                placeholder="Вставьте сюда заголовок, подзаголовок, преимущества, кейсы, CTA, FAQ..."
+              ></textarea>
+            </label>
+
+            <button class="primary-button" type="submit">
+              Провести аудит
+            </button>
+          </form>
+        </section>
+
+        <section class="panel results-panel">
+          <div class="panel-head">
+            <p class="section-kicker">Результат</p>
+            <h2>Коммерческий разбор</h2>
+            <p id="empty-state">
+              После анализа здесь появится скоринг, причины просадки и готовые
+              правки для следующего теста.
+            </p>
+          </div>
+
+          <div id="results" class="results hidden">
+            <div class="score-band">
+              <div>
+                <p class="score-label">Общий балл</p>
+                <p id="score" class="score-value">0</p>
+              </div>
+              <div>
+                <p class="score-label">Диагноз</p>
+                <p id="diagnosis" class="score-diagnosis"></p>
+                <p id="analysis-mode" class="analysis-mode"></p>
+              </div>
+            </div>
+
+            <div id="score-bars" class="score-bars"></div>
+
+            <div id="extraction-block" class="result-block extraction-block hidden">
+              <h3>Что мы взяли со страницы</h3>
+              <p id="extraction-summary" class="field-note"></p>
+              <div class="extraction-meta">
+                <p id="extraction-title" class="extraction-title"></p>
+                <p id="extraction-description" class="extraction-description"></p>
+              </div>
+              <ul id="extraction-preview" class="list extraction-preview"></ul>
+            </div>
+
+            <div id="extraction-editor-block" class="result-block extraction-block hidden">
+              <h3>Подправить извлеченный текст</h3>
+              <p class="field-note">
+                Если сервис вытащил шум или пропустил важное, поправьте текст и
+                пересчитайте аудит уже по вашей версии.
+              </p>
+              <textarea
+                id="extraction-editor"
+                class="extraction-editor"
+                rows="10"
+                placeholder="Здесь появится извлеченный текст страницы"
+              ></textarea>
+              <div class="editor-actions">
+                <button id="recalculate-from-editor" class="secondary-button" type="button">
+                  Пересчитать по этому тексту
+                </button>
+                <p id="editor-status" class="field-note"></p>
+              </div>
+            </div>
+
+            <div class="result-block">
+              <h3>Что мешает конверсии</h3>
+              <ul id="issues-list" class="list"></ul>
+            </div>
+
+            <div class="result-block">
+              <h3>Что править первым</h3>
+              <ul id="actions-list" class="list"></ul>
+            </div>
+
+            <div class="result-block">
+              <h3>Быстрый вариант нового оффера</h3>
+              <div class="rewrite-card">
+                <p id="rewrite-headline" class="rewrite-headline"></p>
+                <p id="rewrite-subhead" class="rewrite-subhead"></p>
+                <p id="rewrite-cta" class="rewrite-cta"></p>
+              </div>
+            </div>
+
+            <div class="result-actions">
+              <button id="copy-report" class="secondary-button" type="button">
+                Скопировать отчет
+              </button>
+              <button id="download-markdown" class="secondary-button" type="button">
+                Скачать Markdown
+              </button>
+              <button id="export-pdf" class="secondary-button" type="button">
+                Сохранить в PDF
+              </button>
+            </div>
+
+            <div class="lead-card">
+              <div class="lead-copy">
+                <p class="section-kicker">Следующий шаг</p>
+                <h3>Получить полный разбор на почту</h3>
+                <p>
+                  Оставьте контакт, чтобы сохранить текущий аудит как лид и
+                  продолжить работу с этим оффером.
+                </p>
+              </div>
+
+              <form id="lead-form" class="lead-form">
+                <label>
+                  Имя
+                  <input
+                    id="lead-name"
+                    name="lead-name"
+                    type="text"
+                    placeholder="Ваше имя"
+                  />
+                </label>
+
+                <label>
+                  Email
+                  <input
+                    id="lead-email"
+                    name="lead-email"
+                    type="email"
+                    placeholder="name@example.com"
+                    required
+                  />
+                </label>
+
+                <label>
+                  Комментарий
+                  <textarea
+                    id="lead-note"
+                    name="lead-note"
+                    rows="4"
+                    placeholder="Что вы хотите улучшить в оффере или воронке?"
+                  ></textarea>
+                </label>
+
+                <button class="primary-button" type="submit">
+                  Сохранить лид
+                </button>
+                <p id="lead-status" class="lead-status"></p>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <section class="proof-strip">
+        <div class="proof-card">
+          <p class="proof-number">1</p>
+          <p>Сначала проверяем спрос и оффер, а не строим тяжелый продукт.</p>
+        </div>
+        <div class="proof-card">
+          <p class="proof-number">2</p>
+          <p>Каждый отчет должен подталкивать к следующему действию.</p>
+        </div>
+        <div class="proof-card">
+          <p class="proof-number">3</p>
+          <p>Нужен инструмент, который сам продает вашу экспертизу.</p>
+        </div>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="panel-head">
+          <p class="section-kicker">История</p>
+          <h2>Последние аудиты</h2>
+          <p>Каждый новый разбор автоматически сохраняется локально.</p>
+        </div>
+        <div class="history-filters">
+          <input
+            id="history-search"
+            type="search"
+            placeholder="Поиск по нише, URL, диагнозу..."
+          />
+          <select id="history-provider-filter">
+            <option value="all">Все провайдеры</option>
+            <option value="gemini">Gemini</option>
+            <option value="openai">OpenAI</option>
+            <option value="heuristic">Heuristic/Fallback</option>
+          </select>
+          <select id="history-mode-filter">
+            <option value="all">URL и Text</option>
+            <option value="url">Только URL</option>
+            <option value="text">Только Text</option>
+          </select>
+        </div>
+        <div id="history-empty" class="field-note">
+          История пока пустая. Первый аудит появится здесь автоматически.
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </section>
+
+      <section class="panel lead-inbox-panel">
+        <div class="panel-head">
+          <p class="section-kicker">Lead Inbox</p>
+          <h2>Recent Leads</h2>
+          <p>Track fresh demand signals without leaving the app.</p>
+        </div>
+        <div id="lead-inbox-summary" class="lead-inbox-summary"></div>
+        <div id="lead-today-queue" class="lead-today-queue"></div>
+        <div class="lead-inbox-filters">
+          <div class="lead-view-switcher">
+            <button class="secondary-button lead-view-button active" type="button" data-lead-view="all">All</button>
+            <button class="secondary-button lead-view-button" type="button" data-lead-view="hot">Hot</button>
+            <button class="secondary-button lead-view-button" type="button" data-lead-view="due_today">Due today</button>
+            <button class="secondary-button lead-view-button" type="button" data-lead-view="overdue">Overdue</button>
+          </div>
+          <input id="lead-search" type="search" placeholder="Search by email, niche, note, next step..." />
+          <select id="lead-status-filter">
+            <option value="all">All statuses</option>
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="won">Won</option>
+            <option value="lost">Lost</option>
+          </select>
+        </div>
+        <div id="lead-inbox-empty" class="field-note">
+          No leads yet. New submissions from the audit form will appear here.
+        </div>
+        <div id="lead-inbox-list" class="lead-inbox-list"></div>
+      </section>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
